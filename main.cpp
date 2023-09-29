@@ -8,8 +8,37 @@
 char	*buffer = (char*)malloc(1);
 size_t	bufferSize = 0;
 
-void strop(std::vector<std::string> args) {
+void memop(std::vector<std::string> args) {
 
+}
+
+std::string xorStrEx(std::string op1, std::string op2) {
+
+}
+
+std::string orStrEx(std::string op1, std::string op2) {
+
+}
+
+std::string andStrEx(std::string op1, std::string op2) {
+    if (op1.size() > )
+}
+
+void strop(std::vector<std::string> args) {
+    if (args.size() == 4) {
+        std::ofstream("result.str");
+
+        std::string op1 = args[2];
+        std::string op2 = args[3];
+
+        if (args[1] == "and" || args[1] == "&") {
+            std::cout << andStrEx(op1, op2) << "\n";
+        } else if (args[1] == "or" || args[1] == "|") {
+
+        } else if (args[1] == "xor" || args[1] == "^") {
+
+        }
+    }
 }
 
 /*
@@ -28,8 +57,8 @@ int parseValue(std::string str) {
 // Perform a number logical operation
 void numop(std::vector<std::string> args) {
 	if (args.size() == 4) {
-		long long op1 = parseValue(args[2]);
-		long long op2 = parseValue(args[3]);
+		unsigned long long op1 = parseValue(args[2]);
+		unsigned long long op2 = parseValue(args[3]);
 		
 		if (args[1] == "and" || args[1] == "&") {
 			std::cout << "0d" << std::dec << (op1 & op2) << "\n";
@@ -40,10 +69,18 @@ void numop(std::vector<std::string> args) {
 			std::cout << "0x" << std::hex << (op1 | op2) << "\n";
 			std::cout << "0b" << std::bitset<64>(op1 | op2).to_string() << "\n";
 		} else if (args[1] == "xor" || args[1] == "^") {
-			std::cout << "0d" << std::dec << (op1 ^ op2) << "\n";
+			std::cout << "0d" << (op1 ^ op2) << "\n";
 			std::cout << "0x" << std::hex << (op1 ^ op2) << "\n";
 			std::cout << "0b" << std::bitset<64>(op1 ^ op2).to_string() << "\n";
-		} else {
+		} else if (args[1] == "shl" || args[1] == "<<") {
+            std::cout << "0d" << std::dec << (op1 << op2) << "\n";
+			std::cout << "0x" << std::hex << (op1 << op2) << "\n";
+			std::cout << "0b" << std::bitset<64>(op1 << op2).to_string() << "\n";
+        } else if (args[1] == "shr" || args[1] == ">>") {
+            std::cout << "0d" << std::dec << (op1 >> op2) << "\n";
+			std::cout << "0x" << std::hex << (op1 >> op2) << "\n";
+			std::cout << "0b" << std::bitset<64>(op1 >> op2).to_string() << "\n";
+        } else {
 			std::cout << "Invalid parameters.\n";
 		}
 	} else if (args.size() == 3) {
@@ -52,8 +89,12 @@ void numop(std::vector<std::string> args) {
 
 			std::cout << "0d" << std::dec << (~op1) << "\n";
 			std::cout << "0x" << std::hex << (~op1) << "\n";
-			std::cout << "0b" << std::bitset<64>(!op1).to_string() << "\n";
+			std::cout << "0b" << std::bitset<64>(~op1).to_string() << "\n";
+		} else {
+			std::cout << "Invalid parameters.\n";
 		}
+	} else {
+		std::cout << "Invalid parameters.\n";
 	}
 }
 
@@ -157,10 +198,9 @@ void prompt() {
 }
 
 int main() {
-	system("cls"); // "clear" on linux
+	system("clear"); // "clear" on linux
 
 	prompt();
 
-	free(buffer);
 	return 0;
 }
