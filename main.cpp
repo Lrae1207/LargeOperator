@@ -13,31 +13,104 @@ void memop(std::vector<std::string> args) {
 }
 
 std::string xorStrEx(std::string op1, std::string op2) {
+    std::string result = "";
+    size_t size1 = op1.size();
+    size_t size2 = op2.size();
 
+    if (size1 > size2) {
+        for (size_t i = 0; i < op1.size(); ++i) {
+            char c = op1[i] ^ op2[i%size2];
+            if (c > 31) {
+                result += c;
+            } else {
+                result += "\\" + std::to_string((int)c);
+            }
+        }
+        return op1;
+    }
+    for (size_t i = 0; i < op2.size(); ++i) {
+        char c = op2[i] ^ op1[i%size1];
+        if (c > 31) {
+            result += c;
+        } else {
+            result += "\\" + std::to_string((int)c);
+        }
+    }
+    return result;
 }
 
 std::string orStrEx(std::string op1, std::string op2) {
+    std::string result = "";
+    size_t size1 = op1.size();
+    size_t size2 = op2.size();
 
+    if (size1 > size2) {
+        for (size_t i = 0; i < op1.size(); ++i) {
+            char c = op1[i] | op2[i%size2];
+            if (c > 31) {
+                result += c;
+            } else {
+                result += "\\" + std::to_string((int)c);
+            }
+        }
+        return op1;
+    }
+    for (size_t i = 0; i < op2.size(); ++i) {
+        char c = op2[i] | op1[i%size1];
+        if (c > 31) {
+            result += c;
+        } else {
+            result += "\\" + std::to_string((int)c);
+        }
+    }
+    return result;
 }
 
 std::string andStrEx(std::string op1, std::string op2) {
-    if (op1.size() > )
+    std::string result = "";
+    size_t size1 = op1.size();
+    size_t size2 = op2.size();
+
+    if (size1 > size2) {
+        for (size_t i = 0; i < op1.size(); ++i) {
+            char c = op1[i] & op2[i%size2];
+            if (c > 31) {
+                result += c;
+            } else {
+                result += "\\" + std::to_string((int)c);
+            }
+        }
+        return op1;
+    }
+    for (size_t i = 0; i < op2.size(); ++i) {
+        char c = op2[i] & op1[i%size1];
+        if (c > 31) {
+            result += c;
+        } else {
+            result += "\\" + std::to_string((int)c);
+        }
+    }
+    return result;
 }
 
 void strop(std::vector<std::string> args) {
-    if (args.size() == 4) {
+    if (args.size() >= 4) {
         std::ofstream("result.str");
 
         std::string op1 = args[2];
         std::string op2 = args[3];
 
         if (args[1] == "and" || args[1] == "&") {
-            std::cout << andStrEx(op1, op2) << "\n";
+            std::cout << "\"" << andStrEx(op1, op2) << "\"" << "\n";
         } else if (args[1] == "or" || args[1] == "|") {
-
+            std::cout << "\"" << orStrEx(op1, op2) << "\"" << "\n";
         } else if (args[1] == "xor" || args[1] == "^") {
-
+            std::cout << "\"" << xorStrEx(op1, op2) << "\"" << "\n";
+        } else {
+            std::cout << "Invalid operation.\n";
         }
+    } else {
+        std::cout << "Invalid parameters.\n";
     }
 }
 
@@ -56,7 +129,7 @@ int parseValue(std::string str) {
 
 // Perform a number logical operation
 void numop(std::vector<std::string> args) {
-	if (args.size() == 4) {
+	if (args.size() >= 4) {
 		unsigned long long op1 = parseValue(args[2]);
 		unsigned long long op2 = parseValue(args[3]);
 		
@@ -81,8 +154,8 @@ void numop(std::vector<std::string> args) {
 			std::cout << "0x" << std::hex << (op1 >> op2) << "\n";
 			std::cout << "0b" << std::bitset<64>(op1 >> op2).to_string() << "\n";
         } else {
-			std::cout << "Invalid parameters.\n";
-		}
+            std::cout << "Invalid operation.\n";
+        }
 	} else if (args.size() == 3) {
 		if (args[1] == "not" || args[1] == "~" || args[1] == "!") {
 			long long op1 = parseValue(args[2]);
@@ -173,22 +246,33 @@ void prompt() {
 	}
 
 	if (args[0] == "exit") {
+        free(buffer);
 		std::cout << "\n";
 		return;
 	} else if (args[0] == "printmem") {
-		for (int i = 0; i < bufferSize; ++i) {
-			std::cout << buffer[i];
-		}
+        if (args.size() == 2 && args[1] == "-n") {
+            for (int i = 0; i < bufferSize; ++i) {
+			    std::cout << "0x" << std::hex << std::to_string(int(buffer[i])) << " ";
+		    }
+        } else {
+		    for (int i = 0; i < bufferSize; ++i) {
+			    std::cout << buffer[i];
+		    }
+        }
 		std::cout << "\n";
 	} else if (args[0] == "load") {
 		if (args.size() >= 2) {
 			free(buffer);
 			loadFile(args[1]) ? std::cout << "File " << args[1] << " loaded.\n" : std::cout << "File not found or failed to load.\n";
-		}
+		} else {
+            std::cout << "Invalid number of arguments.\n";
+        }
 	} else if (args[0] == "numop") {
 		numop(args);
 	} else if (args[0] == "strop") {
 		strop(args);
+    } else if (args[0] == "memop") {
+        memop(args);
 	} else {
 		std::cout << args[0] << " not recognized in this system.\n";
 	}
