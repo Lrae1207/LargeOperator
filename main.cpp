@@ -1,96 +1,25 @@
-#include <iostream>
 #include <string>
 #include <vector>
 #include <fstream>
 #include <ios>
 #include <bitset>
 
+#include "inout.hpp"
+#include "memop.hpp"
+
 char	*buffer = (char*)malloc(1);
 size_t	bufferSize = 0;
 
 void memop(std::vector<std::string> args) {
-
-}
-
-std::string xorStrEx(std::string op1, std::string op2) {
-    std::string result = "";
-    size_t size1 = op1.size();
-    size_t size2 = op2.size();
-
-    if (size1 > size2) {
-        for (size_t i = 0; i < op1.size(); ++i) {
-            char c = op1[i] ^ op2[i%size2];
-            if (c > 31) {
-                result += c;
-            } else {
-                result += "\\" + std::to_string((int)c);
-            }
-        }
-        return op1;
-    }
-    for (size_t i = 0; i < op2.size(); ++i) {
-        char c = op2[i] ^ op1[i%size1];
-        if (c > 31) {
-            result += c;
-        } else {
-            result += "\\" + std::to_string((int)c);
-        }
-    }
-    return result;
-}
-
-std::string orStrEx(std::string op1, std::string op2) {
-    std::string result = "";
-    size_t size1 = op1.size();
-    size_t size2 = op2.size();
-
-    if (size1 > size2) {
-        for (size_t i = 0; i < op1.size(); ++i) {
-            char c = op1[i] | op2[i%size2];
-            if (c > 31) {
-                result += c;
-            } else {
-                result += "\\" + std::to_string((int)c);
-            }
-        }
-        return op1;
-    }
-    for (size_t i = 0; i < op2.size(); ++i) {
-        char c = op2[i] | op1[i%size1];
-        if (c > 31) {
-            result += c;
-        } else {
-            result += "\\" + std::to_string((int)c);
-        }
-    }
-    return result;
-}
-
-std::string andStrEx(std::string op1, std::string op2) {
-    std::string result = "";
-    size_t size1 = op1.size();
-    size_t size2 = op2.size();
-
-    if (size1 > size2) {
-        for (size_t i = 0; i < op1.size(); ++i) {
-            char c = op1[i] & op2[i%size2];
-            if (c > 31) {
-                result += c;
-            } else {
-                result += "\\" + std::to_string((int)c);
-            }
-        }
-        return op1;
-    }
-    for (size_t i = 0; i < op2.size(); ++i) {
-        char c = op2[i] & op1[i%size1];
-        if (c > 31) {
-            result += c;
-        } else {
-            result += "\\" + std::to_string((int)c);
-        }
-    }
-    return result;
+	if (args.size() == 2) {
+		if (args[1] == "and" || args[1] == "&") {
+			std::cout << "\"" << andStrEx(memToStr(buffer, bufferSize), memToStr(buffer, bufferSize)) << "\"";
+		} else if (args[1] == "or" || args[1] == "|") {
+			std::cout << "\"" << orStrEx(memToStr(buffer, bufferSize), memToStr(buffer, bufferSize)) << "\"";
+		} else if (args[1] == "xor" || args[1] == "^") {
+			std::cout << "\"" << andStrEx(memToStr(buffer, bufferSize), memToStr(buffer, bufferSize)) << "\"";
+		}
+	}
 }
 
 void strop(std::vector<std::string> args) {
@@ -246,8 +175,6 @@ void prompt() {
 	}
 
 	if (args[0] == "exit") {
-        free(buffer);
-		std::cout << "\n";
 		return;
 	} else if (args[0] == "printmem") {
         if (args.size() == 2 && args[1] == "-n") {
@@ -263,9 +190,9 @@ void prompt() {
 	} else if (args[0] == "load") {
 		if (args.size() >= 2) {
 			free(buffer);
-			loadFile(args[1]) ? std::cout << "File " << args[1] << " loaded.\n" : std::cout << "File not found or failed to load.\n";
+			loadFile(args[1]) ? std::cout << "File " << args[1] << " loaded.\n" : std::cout << "File not found or failed to load.\n" << exec("ls");
 		} else {
-            std::cout << "Invalid number of arguments.\n";
+            std::cout << "Invalid number of arguments.\n" << exec("ls");
         }
 	} else if (args[0] == "numop") {
 		numop(args);
