@@ -10,7 +10,7 @@ tree() {
 		else
 			if [ $findthis = $file ]
 			then
-				echo $findthis found at $(pwd)
+				echo $(pwd)$findthis
 				exit 0
 			fi
 		fi
@@ -21,7 +21,7 @@ if [[ $# -eq 1 ]]
 then
 	tree
 else
-	echo "This command requires and handles only one parameter/argument"
+	echo ":("
 fi
 
-echo "	$findthis not found"
+echo ":("
