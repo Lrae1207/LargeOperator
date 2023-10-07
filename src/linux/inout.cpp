@@ -4,17 +4,18 @@
 std::string exec(const char* cmd) {
     char buffer[128];
     std::string result = "";
-    FILE* pipe = popen(cmd, "r");
+    FILE* pipe = _popen(cmd, "r"); // popen on linux
     if (!pipe) throw std::runtime_error("popen() failed!");
     try {
         while (fgets(buffer, sizeof buffer, pipe) != NULL) {
             result += buffer;
         }
-    } catch (...) {
-        pclose(pipe);
+    }
+    catch (...) {
+        _pclose(pipe); // pclose on linux
         throw;
     }
-    pclose(pipe);
+    _pclose(pipe); // pclose on linux
     return result;
 }
 
@@ -24,9 +25,32 @@ void printClamped(std::string buffer, int n, std::string color) {
     for (int i = 0; i < n; ++i) {
         if (i < buffer.size()) {
             std::cout << buffer[i];
-        } else {
+        }
+        else {
             std::cout << ' ';
         }
     }
     std::cout << RESET;
+}
+
+/*
+    Return a number written in string format converted to a long long
+*/
+int parseValue(std::string str) {
+    // TODO: add try catch to avoid crashing on invalid syntax/order
+    if (str[0] == '0' && str[1] == 'x') {
+        return std::stoll(str, 0, 16);
+    }
+
+    // Assume it's decimal
+    return std::stoll(str);
+}
+
+/*
+    Does a file exist in the current directory?
+*/
+bool fileExists(const std::string& filename)
+{
+    struct stat buf;
+    return stat(filename.c_str(), &buf) != -1;
 }
