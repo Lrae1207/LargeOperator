@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define BLACK     "\x1b[30m"
 #define RED       "\x1b[31m"
@@ -12,3 +14,5 @@
 
 std::string exec(const char* cmd);
 void printClamped(std::string buffer, int n, std::string color);
+int parseValue(std::string str);
+bool fileExists(const std::string& filename);
