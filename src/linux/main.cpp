@@ -311,7 +311,7 @@ void prompt() {
 }
 
 int main() {
-	system("cls"); // "clear" on linux
+	system("clear");
 
 	prompt();
 
